@@ -37,20 +37,37 @@ const restaurant = {
 
 };
 
-
-const menu = [...restaurant.starterMenu, ...restaurant.mainMenu];
-console.log(menu);
+// console.log(restaurant.openingHours.mon.open);
 
 
-for (const item of menu) console.log(item);
+if (restaurant.openingHours && restaurant.openingHours.mon)
+    console.log(restaurant.openingHours.mon.open);
+
+// WITH optional chaining
+console.log(restaurant.openingHours?.mon?.open);
+console.log(restaurant.openingHours.fri?.open);
 
 
-// for (const item of menu.entries()) {
-//     console.log(`${item[0] + 1}: ${item[1]}`);
-// }
+// Example
 
-for (const [i, el] of menu.entries()) {
-    console.log(`${i + 1}: ${el}`);
+const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+for (const day of days) {
+    const open = restaurant.openingHours[day]?.open ?? 'Closed';
+    console.log(`On ${day}, we open at ${open}`);
+
 }
 
-console.log([...menu.entries()]);
+
+// Methods
+console.log(restaurant.order?.(0, 1) ?? 'Method does not exist');
+
+// Arrays
+
+// const users = [{ name: 'Swati', email: 'swati@gmail.com' }];
+const users = []
+
+console.log(users[0]?.name ?? 'User array empty');
+
+if (users.length > 0) console.log(users[0].name);
+else console.log('User array empty');
