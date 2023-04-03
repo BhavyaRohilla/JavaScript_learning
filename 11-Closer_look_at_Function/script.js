@@ -99,7 +99,7 @@ const high5 = function () {
 
 document.body.addEventListener('click', high5);
 
-['bhavya', 'swati', 'Tiya'].forEach(high5); 
+['bhavya', 'swati', 'Tiya'].forEach(high5);
 
 //Function Returning Function
 
@@ -174,5 +174,146 @@ book.apply(swiss, flightData);
 console.log(swiss);
 
 book.call(swiss, ...flightData)
+
+
+
+// bind method
+
+const bookEW = book.bind(euroWings);
+const bookLH = book.bind(lufthansa);
+const bookLX = book.bind(swiss);
+
+console.log(bookEW);
+
+bookEW(23, 'Steven William');
+
+const bookEW23 = book.bind(euroWings, 23);
+bookEW23('Bhavya Rohilla');
+
+
+// with event listener
+
+lufthansa.planes = 300;
+lufthansa.buyPlane = function () {
+    console.log(this);
+
+    this.planes++;
+    console.log(this.planes);
+}
+// lufthansa.buyPlane();
+
+document.querySelector('.buy').addEventListener('click', lufthansa.buyPlane.bind(lufthansa));
+// console.log(lufthansa.buyPlane.bind(lufthansa));
+
+// Partial application
+
+const addTax = (rate, value) => value + value * rate;
+console.log(addTax(0.1, 200));
+
+const addVat = addTax.bind(null, 0.23);
+console.log(addVat);
+
+// addVat = value => value + value * 23;
+
+console.log(addVat(100));
+
+const addTaxRate = function (rate) {
+    return function (value) {
+        return value + value * rate;
+    };
+};
+
+const addVat2 = addTaxRate(0.23);
+console.log(addVat2(100));
+
+
+//IMMEDIATELY INVOKED FUNCTION EXPRESSION (IIFE);
+
+const runOnce = function () {
+    console.log('this will never run again');
+};
+
+runOnce();
+
+//IIFE
+
+(function () {
+    console.log('This will never run again');
+})();
+
+
+(() => console.log('THIS WILL ALSO NEVER RUN AGAIN'))();
+
+{
+    const isPrivate = 23;
+    var notPrivate = 46;
+}
+
+console.log(notPrivate);
+
+
+// closures
+
+const secureBooking = function () {
+    let passengerCount = 0;
+    let swatiCount = 0;
+
+    return function () {
+        passengerCount++;
+        swatiCount++;
+        console.log(`${passengerCount} ${swatiCount} passengers`);
+    }
+}
+
+const booker = secureBooking();
+
+booker();
+booker();
+booker();
+booker();
+
+console.dir(booker);
+
+
+let f;
+
+const g = function () {
+    const a = 23;
+    f = function () {
+        console.log(a * 2);
+    };
+};
+
+const h = function () {
+    const b = 777;
+    f = function () {
+        console.log(b * 2);
+    }
+}
+
+g();
+f();
+console.dir(f);
+
+// Re-assigning f function
+h();
+f();
+console.dir(f);
+
+
+// Example 2
+const boardPassengers = function (n, wait) {
+    const perGroup = n / 3;
+
+    setTimeout(function () {
+        console.log(`We are now boarding all ${n} passengers`);
+        console.log(`There are 3 groups, each with ${perGroup} passengers`);
+    }, wait * 1000);
+
+    console.log(`Will start boarding in ${wait} seconds`);
+};
+
+const perGroup = 1000;
+boardPassengers(180, 3);
 
 */
