@@ -62,12 +62,14 @@ const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
 
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = '';
   // .textContent = 0
 
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
 
-  movements.forEach(function (mov, i) {
+
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
     const html = `
@@ -156,6 +158,22 @@ btnLogin.addEventListener('click', function (e) {
   }
 });
 
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  const amount = Number(inputLoanAmount.value);
+
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    // Add movement
+    currentAccount.movements.push(amount);
+
+    // Update UI
+    updateUI(currentAccount);
+
+  }
+  inputLoanAmount.value = '';
+});
+
 
 btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();
@@ -193,6 +211,14 @@ btnClose.addEventListener('click', function (e) {
 
   inputCloseUsername.value = inputClosePin.value = '';
 
+});
+
+
+let sorted = false;
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
 })
 
 
@@ -456,3 +482,144 @@ console.log(overallBalance);
 const overallBalance2 = accounts.flatMap(acc => acc.movements).reduce((acc, mov) => acc + mov, 0);
 console.log(overallBalance2);
 */
+
+/*
+// Sorting Arrays 
+
+//Strings 
+
+const owners = ['Bhavya', 'Swati', 'Tiya', 'Rishav'];
+console.log(owners.sort());
+
+// Numbers
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+console.log(movements);
+
+// return < 0, A, B (keep order)
+// return > 0, B, A (switch order)
+
+// Ascending
+// movements.sort((a, b) => {
+//   if (a > b) return 1;
+//   if (a < b) return -1;
+// })
+// console.log(movements);
+movements.sort((a, b) => a - b);
+console.log(movements);
+
+// Descending 
+// movements.sort((a, b) => {
+//   if (a > b) return -1;
+//   if (a < b) return 1;
+// })
+// console.log(movements);
+movements.sort((a, b) => b - a);
+console.log(movements);
+
+
+*/
+
+/*
+// More ways of creating and filling array
+const arr = [1, 2, 3, 4, 5, 6, 7];
+console.log(new Array(1, 2, 3, 4, 5, 6, 7));
+
+//Empty array + fill method
+const x = new Array(7);
+console.log(x);
+// console.log(x.map(() => 5));
+
+// x.fill(1);
+x.fill(1, 3, 5);
+console.log(x);
+
+arr.fill(23, 2, 6);
+console.log(arr);
+
+
+// Array.from
+const y = Array.from({ length: 7 }, () => 1);
+console.log(y);
+
+const z = Array.from({ length: 7 }, (_, i) => i + 1);
+console.log(z);
+
+
+labelBalance.addEventListener('click', function () {
+  const movementsUI = Array.from(document.querySelectorAll('.movements__value'));
+
+  console.log(movementsUI.map(el => el.textContent));
+})
+*/
+
+
+/*
+// Some and every
+
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+console.log(movements);
+
+// EQUALITY
+console.log(movements.includes(-130));
+
+
+// CONDITION
+console.log(movements.some(mov => mov === -130));
+
+const anyDeposits = movements.some(mov => mov > 0);
+console.log(anyDeposits);
+
+// currentAccount.movements.some(mov => mov >= amount * 0.1)
+
+// if (movements.some(mov => mov >= 10000)) {
+//   console.log('hello');
+// }
+
+// EVERY
+console.log(movements.every(mov => mov > 0));
+
+console.log(account4.movements.every(mov => mov > 0));
+
+
+// Separate Callback
+
+const deposit = mov => mov > 0;
+console.log(movements.some(deposit));
+console.log(movements.every(deposit));
+console.log(movements.filter(deposit));
+*/
+
+////////////////////////////////////////
+// Array Methods Practice
+
+// 1.
+const bankDepositSum = accounts.flatMap(acc => acc.movements).filter(mov => mov > 0).reduce((sum, cur) => sum + cur, 0);
+console.log(bankDepositSum);
+
+// 2.
+const numDeposits1000 = accounts.flatMap(acc => acc.movements).reduce((count, cur) => (cur >= 1000 ? count + 1 : count), 0);
+console.log(numDeposits1000);
+
+
+// 3. 
+const { deposits, withdrawals } = accounts.flatMap(acc => acc.movements).reduce((sum, cur) => {
+  sum[cur > 0 ? 'deposits' : 'withdrawals'] += cur;
+  return sum;
+
+}, { deposits: 0, withdrawals: 0 });
+
+console.log(deposits, withdrawals);
+
+
+// 4.
+//this is a nice title -> This Is a Nice Title
+
+// const convertTitleCase = function (title) {
+//   const exception = ['a', 'an' , 'the', 'but', 'or', 'on', 'in', 'with'];
+
+//   const titleCase = title.toLowerCase().split(' ').map(word => (exceptions));
+//   return titleCase;
+// };
+// console.log(convertTitleCase('this is a nice title'));
+// console.log(convertTitleCase('this is a LONG title but not too long'));
+// console.log(convertTitleCase('and here is another title with an EXAMPLE'));
